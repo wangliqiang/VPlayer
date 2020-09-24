@@ -4,6 +4,7 @@
 
 #ifndef VPLAYER_SAFE_QUEUE_H
 #define VPLAYER_SAFE_QUEUE_H
+
 #include <queue>
 #include <pthread.h>
 #include "macro.h"
@@ -43,7 +44,7 @@ public:
     }
 
 
-    void enQueue( T new_value) {
+    void enQueue(T new_value) {
 #ifdef C11
         lock_guard<mutex> lk(mt);
         if (work) {
@@ -57,7 +58,7 @@ public:
             pthread_cond_signal(&cond);
             pthread_mutex_unlock(&mutex);
         } else {
-            LOGE("无法加入数据====:%d",q.size());
+            LOGE("无法加入数据====:%d", q.size());
             releaseHandle(new_value);
         }
         pthread_mutex_unlock(&mutex);
@@ -133,7 +134,7 @@ public:
             releaseHandle(value);
             q.pop();
         }
-        LOGE("清空数据====:%d",q.size());
+        LOGE("清空数据====:%d", q.size());
         pthread_mutex_unlock(&mutex);
 #endif
 
@@ -175,4 +176,5 @@ private:
     SyncHandle syncHandle;
 
 };
+
 #endif //VPLAYER_SAFE_QUEUE_H

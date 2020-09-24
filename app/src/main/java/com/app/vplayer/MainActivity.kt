@@ -15,8 +15,9 @@ import java.io.File
 
 class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
-    private var seekPosition:Int = 0;
-    private var totalDuration:Int = 0;
+    private var seekPosition: Int = 0
+    private var totalDuration: Int = 0
+    private lateinit var vPlayer: VPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +30,7 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
         checkPermission()
 
-        val vPlayer = VPlayer()
+        vPlayer = VPlayer()
         vPlayer.setSurfaceView(surfaceView)
 
         val file = File(Environment.getExternalStorageDirectory(), "input.mp4")
@@ -43,7 +44,7 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
         vPlayer.setOnProgressListener(object : VPlayer.OnProgressListener {
             override fun onProgress(progress: Int) {
-                runOnUiThread{
+                runOnUiThread {
                     current_time.text = formatTime(progress)
                     val position: Int = progress * 100 / 115
                     seekBar.progress = position
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
         seekPosition = progress;
+        vPlayer.seekTo(seekPosition * totalDuration / 100)
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {

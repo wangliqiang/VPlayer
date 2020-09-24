@@ -85,7 +85,8 @@ void VPlayerFFmpeg::prepareFFmpeg() {
         // 获取视频总时长
         if (formatContext->duration != AV_NOPTS_VALUE) {
             if (javaCallHelper)
-                javaCallHelper->getDuration(THREAD_CHILD, static_cast<int>(stream->duration*av_q2d(stream->time_base)));
+                javaCallHelper->getDuration(THREAD_CHILD, static_cast<int>(stream->duration *
+                                                                           av_q2d(stream->time_base)));
         }
 
         if (codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
@@ -174,8 +175,16 @@ void VPlayerFFmpeg::setRenderCallback(RenderFrame renderFrame) {
     this->renderFrame = renderFrame;
 }
 
-void VPlayerFFmpeg::seekTo(int Progress) {
-    
+void VPlayerFFmpeg::seekTo(int progress) {
+//    videoChannel->pkt_queue.clear();
+//    videoChannel->frame_queue.clear();
+//    int result = av_seek_frame(formatContext, formatContext->streams[1]->index,
+//                               (int64_t) (progress / av_q2d(formatContext->streams[1]->time_base)),
+//                               AVSEEK_FLAG_BACKWARD);
+//    if (result) {
+//        LOGE("Player Error : Can not seek video to %d", progress);
+//        return;
+//    }
 }
 
 

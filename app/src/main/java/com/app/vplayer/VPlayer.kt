@@ -32,6 +32,10 @@ class VPlayer : SurfaceHolder.Callback {
         this.native_start()
     }
 
+    fun seekTo(positon: Int) {
+        native_seekTo(positon)
+    }
+
     fun setSurfaceView(surfaceView: SurfaceView) {
         this.surfaceHolder?.removeCallback(this)
         this.surfaceHolder = surfaceView.holder

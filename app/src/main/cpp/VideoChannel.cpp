@@ -119,7 +119,6 @@ void VideoChannel::synchronizeFrame() {
             javaCallHelper->onProgress(THREAD_CHILD,
                                        static_cast<int>(av_frame_get_best_effort_timestamp(frame) *
                                                         av_q2d(time_base)));
-
         // 16ms
         LOGE("解码一帧视频 %d", frame_queue.size());
         // pts
