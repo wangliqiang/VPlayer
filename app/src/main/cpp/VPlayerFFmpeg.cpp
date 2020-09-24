@@ -63,7 +63,7 @@ void VPlayerFFmpeg::prepareFFmpeg() {
                 javaCallHelper->onError(THREAD_CHILD, FFMPEG_FIND_DECODER_FAIL);
             return;
         }
-        //创建解码上下文
+        // 创建解码上下文
         AVCodecContext *codecContext = avcodec_alloc_context3(dec);
         if (!codecContext) {
             if (javaCallHelper)
@@ -82,6 +82,12 @@ void VPlayerFFmpeg::prepareFFmpeg() {
                 javaCallHelper->onError(THREAD_CHILD, FFMPEG_FIND_DECODER_FAIL);
             return;
         }
+        // 获取视频总时长
+        if (formatContext->duration != AV_NOPTS_VALUE) {
+            if (javaCallHelper)
+                javaCallHelper->getDuration(THREAD_CHILD, static_cast<int>(stream->duration*av_q2d(stream->time_base)));
+        }
+
         if (codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
             // 音频
             audioChannel = new AudioChannel(i, javaCallHelper, codecContext, stream->time_base);
@@ -166,6 +172,10 @@ void VPlayerFFmpeg::play() {
 
 void VPlayerFFmpeg::setRenderCallback(RenderFrame renderFrame) {
     this->renderFrame = renderFrame;
+}
+
+void VPlayerFFmpeg::seekTo(int Progress) {
+    
 }
 
 

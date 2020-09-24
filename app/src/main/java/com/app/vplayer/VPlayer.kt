@@ -10,9 +10,10 @@ class VPlayer : SurfaceHolder.Callback {
         System.loadLibrary("native-lib")
     }
 
-    external fun native_prepare(dataSource: String);
-    external fun native_start();
+    external fun native_prepare(dataSource: String)
+    external fun native_start()
     external fun native_set_surface(surface: Surface)
+    external fun native_seekTo(progress: Int)
 
     private var dataSource: String = ""
     private var surfaceHolder: SurfaceHolder? = null
@@ -50,6 +51,7 @@ class VPlayer : SurfaceHolder.Callback {
     private var onPrepareListener: OnPrepareListener? = null
     private var onProgressListener: OnProgressListener? = null
     private var onErrorListener: OnErrorListener? = null
+    private var duration: Duration? = null
 
     fun setOnPrepareListener(onPrepareListener: OnPrepareListener) {
         this.onPrepareListener = onPrepareListener
@@ -61,6 +63,10 @@ class VPlayer : SurfaceHolder.Callback {
 
     fun setOnErrorListener(onErrorListener: OnErrorListener) {
         this.onErrorListener = onErrorListener;
+    }
+
+    fun getDisplayDuration(duration: Duration) {
+        this.duration = duration;
     }
 
 
@@ -76,6 +82,10 @@ class VPlayer : SurfaceHolder.Callback {
         onErrorListener?.onError(errorCode)
     }
 
+    fun getDuration(d: Int) {
+        duration?.get(d)
+    }
+
     interface OnPrepareListener {
         fun onPrepared()
     }
@@ -86,6 +96,10 @@ class VPlayer : SurfaceHolder.Callback {
 
     interface OnErrorListener {
         fun onError(errorCode: Int)
+    }
+
+    interface Duration {
+        fun get(duration: Int);
     }
 
 

@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
-import android.view.View
 import android.view.WindowManager
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,9 @@ import java.io.File
 
 
 class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
+
+    private var seekPosition:Int = 0;
+    private var totalDuration:Int = 0;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,9 +41,22 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
             }
         })
 
-        vPlayer.setOnProgressListener(object :VPlayer.OnProgressListener{
+        vPlayer.setOnProgressListener(object : VPlayer.OnProgressListener {
             override fun onProgress(progress: Int) {
-                Log.e("tag","$progress");
+                runOnUiThread{
+                    current_time.text = formatTime(progress)
+                    val position: Int = progress * 100 / 115
+                    seekBar.progress = position
+                }
+            }
+
+        })
+        vPlayer.getDisplayDuration(object : VPlayer.Duration {
+            override fun get(duration: Int) {
+                runOnUiThread {
+                    totalDuration = duration;
+                    total_duration.text = formatTime(totalDuration)
+                }
             }
 
         })
@@ -52,7 +67,7 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
     }
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
+        seekPosition = progress;
     }
 
     override fun onStartTrackingTouch(seekBar: SeekBar?) {
@@ -84,5 +99,11 @@ class MainActivity : AppCompatActivity(), SeekBar.OnSeekBarChangeListener {
                 )
             }
         }
+    }
+
+    private fun formatTime(time: Int): String? {
+        val minute = time / 60
+        val second = time % 60
+        return (if (minute < 10) "0$minute" else minute).toString() + ":" + if (second < 10) "0$second" else second
     }
 }

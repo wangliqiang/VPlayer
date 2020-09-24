@@ -32,6 +32,8 @@ public:
 
     void play();
 
+    void seekTo(int Progress);
+
     void setRenderCallback(RenderFrame renderFrame);
 
 private:

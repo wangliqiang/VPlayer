@@ -69,4 +69,10 @@ Java_com_app_vplayer_VPlayer_native_1set_1surface(JNIEnv *env, jobject thiz, job
     }
     // 创建新的窗口用于视频显示
     window = ANativeWindow_fromSurface(env, surface);
+}extern "C"
+JNIEXPORT void JNICALL
+Java_com_app_vplayer_VPlayer_native_1seekTo(JNIEnv *env, jobject thiz, jint progress) {
+    if(vPlayerFFmpeg){
+        vPlayerFFmpeg->seekTo(progress);
+    }
 }

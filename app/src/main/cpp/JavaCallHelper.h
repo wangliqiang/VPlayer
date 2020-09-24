@@ -18,6 +18,8 @@ public:
 
     void onProgress(int thread, int progress);
 
+    void getDuration (int thread,int duration);
+
 private:
     JavaVM *javaVm;
     JNIEnv *env;
@@ -26,6 +28,7 @@ private:
     jmethodID jmid_prepare;
     jmethodID jmid_error;
     jmethodID jmid_progress;
+    jmethodID jmid_duration;
 };
 
 

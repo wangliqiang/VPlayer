@@ -10,6 +10,7 @@ extern "C" {
 #include <libavutil/time.h>
 #include <libswscale/swscale.h>
 }
+
 void dropFrame(queue<AVFrame *> &q) {
     if (!q.empty()) {
         AVFrame *frame = q.front();
@@ -17,6 +18,7 @@ void dropFrame(queue<AVFrame *> &q) {
         BaseChannel::releaseAvFrame(frame);
     }
 }
+
 VideoChannel::VideoChannel(int id, JavaCallHelper *javaCallHelper, AVCodecContext *avCodecContext,
                            AVRational time_base)
         : BaseChannel(id, javaCallHelper, avCodecContext, time_base) {
@@ -112,6 +114,12 @@ void VideoChannel::synchronizeFrame() {
         // 回调出去
         renderFrame(dst_data[0], dst_linesize[0], avCodecContext->width, avCodecContext->height);
 
+        // 当前视频进度
+        if (javaCallHelper)
+            javaCallHelper->onProgress(THREAD_CHILD,
+                                       static_cast<int>(av_frame_get_best_effort_timestamp(frame) *
+                                                        av_q2d(time_base)));
+
         // 16ms
         LOGE("解码一帧视频 %d", frame_queue.size());
         // pts
@@ -124,7 +132,7 @@ void VideoChannel::synchronizeFrame() {
         double delay = extra_delay + frame_delays;
 
         double diff = clock - audioClock;
-        LOGE("----相差------- %d",diff);
+        LOGE("----相差------- %d", diff);
         // 视频超前
         if (clock > audioClock) {
             if (diff > 1) {
